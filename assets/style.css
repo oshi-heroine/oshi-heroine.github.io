@@ -29,7 +29,7 @@ main{max-width:1100px;margin:0 auto;padding:0 16px 40px}
 .w-list{display:grid;gap:10px}
 .hcard{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;color:var(--fg);transition:transform .15s,border-color .15s}
 .hcard:hover{border-color:var(--ac);transform:translateY(-2px)}
-.hc-b b{font-size:16px;margin-right:6px}.hc-b p{margin:4px 0;font-size:14px;color:var(--muted);line-height:1.6}
+.hc-b b{font-size:16px;margin-right:6px}.hc-b p{margin:4px 0;font-size:14px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .tile{flex:0 0 56px;height:56px;border-radius:14px;background:linear-gradient(140deg,var(--c),#2b2260);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4)}
 .tile.big{flex-basis:110px;height:110px;font-size:48px;border-radius:24px}
 .role{font-style:normal;font-size:11px;border-radius:4px;padding:1px 6px;vertical-align:2px}.role.main{background:#ff6fa533;color:#ff9ac1}.role.sub{background:#ffd16633;color:#ffd166}
@@ -49,7 +49,7 @@ main{max-width:1100px;margin:0 auto;padding:0 16px 40px}
 .g-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 0;border-top:1px solid var(--line)}.g-row span{width:5em;font-size:14px}@media(max-width:500px){.g-row span{width:100%}}
 .crumb{font-size:13px;color:var(--muted);margin:10px 0}.crumb a{color:var(--muted)}
 .hp-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:10px 0 10px}.hp-top h1{margin:0;font-size:30px}.hp-top p{margin:2px 0}
-.point{font-size:17px;background:var(--card);border-left:4px solid var(--ac);border-radius:8px;padding:12px 16px}
+.point{font-size:17px;line-height:1.9;background:var(--card);border-left:4px solid var(--ac);border-radius:8px;padding:12px 16px}
 .hp h2{font-size:20px;margin:28px 0 10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
 .next{text-align:center;margin:32px 0 0;padding:20px;border:1px dashed var(--line);border-radius:16px}.next .b1,.next .b2{margin:4px}
