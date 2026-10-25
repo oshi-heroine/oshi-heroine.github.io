@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://oshi-heroine.github.io/sitemap.xml
