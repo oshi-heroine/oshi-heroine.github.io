@@ -131,7 +131,7 @@ for w in WORKS:
         '<div class="w-body"><div class="w-pv">%s</div><div class="w-list">%s</div></div>%s</section>'
         % (w["rank"], w["rank"], esc(w["work"]), pv_block(w, True), "".join(card(h) for h in w["list"]), watch_line(w)))
 picks = [{"id": h["id"], "n": h["name"], "w": h["work"], "p": h["point"], "c": color(h)} for h in H]
-hero = """<section class="hero"><img class="banner" src="img/header.jpg" width="1696" height="624" alt="アニメ美少女ヒロイン図鑑 HEROINE COLLECTION"><h1>{name}</h1><p class="catch">{catch}</p>
+hero = """<section class="hero"><img class="banner" src="img/header.jpg" width="1696" height="624" alt="勝ち負けなんてどうでもいい。あんたの推しは必ずいる 〜アニメの美少女ヒロイン図鑑〜"><h1>{name}</h1><p class="catch">{catch}</p>
 <p class="lead">{lead}</p>
 <ul class="nums"><li><b>{nw}</b>作品</li><li><b>{nh}</b>人のヒロイン</li><li><b>{ns}</b>人は勝ち負け関係なし枠</li></ul>
 <div class="cta"><button id="gacha" class="b1" type="button">今日の推し候補を引く</button><a class="b2" href="#list">ランキングから探す</a></div>
