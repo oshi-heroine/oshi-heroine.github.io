@@ -38,11 +38,12 @@ def rakuten(q):
     s = "https://search.rakuten.co.jp/search/mall/" + urllib.parse.quote(q) + "/"
     return "https://hb.afl.rakuten.co.jp/hgc/" + S["rakuten_affiliate_id"] + "/?pc=" + urllib.parse.quote(s, safe="") if S.get("rakuten_affiliate_id") else s
 def yahoo(q):
-    y = S.get("moshimo_yahoo")  # もしもは使わない（2026-10-25 本人）。site.json に無いので Yahoo! ボタンは出ない
-    if not y: return None
+    """Yahoo!ショッピングはバリューコマース経由（もしもは使わない、2026-10-25 本人）"""
+    v = S.get("vc_yahoo")
+    if not v or not v.get("active"): return None
     dest = "https://shopping.yahoo.co.jp/search?p=" + urllib.parse.quote(q)
-    return "https://af.moshimo.com/af/c/click?a_id=%s&p_id=%s&pc_id=%s&pl_id=%s&url=%s" % (
-        y["a_id"], y["p_id"], y["pc_id"], y["pl_id"], urllib.parse.quote(dest, safe=""))
+    return "https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=%s&pid=%s&vc_url=%s" % (
+        v["sid"], v["pid"], urllib.parse.quote(dest, safe=""))
 def btn(cls, url, label, style=""):
     return '<a class="btn %s" %shref="%s" target="_blank" rel="nofollow sponsored noopener">%s</a>' % (
         cls, ('style="%s" ' % style) if style else "", esc(url), label)
@@ -105,7 +106,7 @@ def page(path, title, desc, body, rel=""):
 <meta property="og:title" content="{full}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{canon}">
 <meta property="og:type" content="website">{ogimg}<meta name="twitter:card" content="summary_large_image">{gsv}
 <link rel="stylesheet" href="{rel}style.css">{ga}</head><body>
-<p class="pr">当サイトはアフィリエイト広告（Amazonアソシエイト・楽天アフィリエイト）を利用しています</p>
+<p class="pr">当サイトはアフィリエイト広告（{asps}）を利用しています</p>
 <header class="top"><a class="logo" href="{rel}index.html"><b>{name}</b><small>{catch}</small></a><nav>{nav}</nav></header>
 <main>{body}</main>
 <footer><p>{name}　{catch}</p><p><a href="{rel}about.html">運営者の気持ち</a>・<a href="{rel}privacy.html">プライバシーポリシー・広告について</a></p>
@@ -113,13 +114,14 @@ def page(path, title, desc, body, rel=""):
 <script src="{rel}app.js"></script></body></html>""".format(
         full=esc(full), desc=esc(desc), canon=canon, ogimg='<meta property="og:image" content="%s">' % og if og else "",
         gsv='<meta name="google-site-verification" content="%s">' % esc(S["google_site_verification"]) if S.get("google_site_verification") else "",
-        rel=rel, ga=GA_TAG, name=esc(S["name"]), catch=esc(S["catch"]), nav=nav, body=body)
+        rel=rel, ga=GA_TAG, asps=ASPS_TXT, name=esc(S["name"]), catch=esc(S["catch"]), nav=nav, body=body)
     p = os.path.join(OUT, path)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     open(p, "w", encoding="utf-8").write(html_)
     SITEMAP.append(canon)
 
 SITEMAP = []
+ASPS_TXT = "Amazonアソシエイト・楽天アフィリエイト" + ("・バリューコマース" if (S.get("vc_yahoo") or {}).get("active") else "")
 if os.path.exists(OUT): shutil.rmtree(OUT)
 os.makedirs(OUT)
 
@@ -171,7 +173,7 @@ for w in WORKS:
 # ---------- 運営者・プライバシー ----------
 page("about.html", "運営者の気持ち", "知らない美少女を、みんなに知ってもらうためのサイトです。", '<section class="intro"><h1>運営者の気持ち</h1>%s</section>' % S["about_html"])
 page("privacy.html", "プライバシーポリシー・広告について", "当サイトのプライバシーポリシーと広告の表示について。", """<section class="intro"><h1>プライバシーポリシー・広告について</h1>
-<h2>広告について</h2><p>当サイトは Amazonアソシエイト・楽天アフィリエイトに参加しています。リンクからの購入で、運営者に紹介料が入ることがあります。紹介する作品やキャラクターの選び方は、広告の有無とは関係ありません。</p>
+<h2>広告について</h2><p>当サイトは """ + ASPS_TXT + """ に参加しています。リンクからの購入で、運営者に紹介料が入ることがあります。紹介する作品やキャラクターの選び方は、広告の有無とは関係ありません。</p>
 <h2>アクセス解析</h2><p>当サイトは Google アナリティクスを利用しています。データは匿名で集められ、個人を特定するものではありません。ブラウザの設定で Cookie を無効にできます。</p>
 <h2>著作権について</h2><p>作品・キャラクターの権利は各権利者に帰属します。キャラクターの画像は掲載していません。それ以外にキャラクターの画像は掲載せず、作品の映像は公式 YouTube の動画を埋め込みでのみ紹介しています。問題がある場合はお手数ですがご連絡ください。</p>
 <h2>データの出典</h2><p>人気数: AniList（お気に入り登録数）／作品の並び: JustWatch・Netflix 公式 Top 10 ほかの配信サービス総合ランキング／配信先: JustWatch。</p></section>""")
