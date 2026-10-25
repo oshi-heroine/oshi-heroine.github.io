@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """アニメヒロイン図鑑サイトを docs/ に書き出す。
+ヘッダー assets/header.jpg は本人提供の画像（2026-10-25）。上書きしない。
 入力: data/site.json, data/heroines.json, data/pv.json, data/watch.json
-画像はキャラ絵を一切使わない（YouTube 公式サムネイルの直リンクのみ）。"""
+ヘッダー以外にキャラ絵は使わない（YouTube 公式サムネイルの直リンクのみ）。"""
 import json, os, html, urllib.parse, hashlib, datetime, shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -108,7 +109,7 @@ def page(path, title, desc, body, rel=""):
 <header class="top"><a class="logo" href="{rel}index.html"><b>{name}</b><small>{catch}</small></a><nav>{nav}</nav></header>
 <main>{body}</main>
 <footer><p>{name}　{catch}</p><p><a href="{rel}about.html">運営者の気持ち</a>・<a href="{rel}privacy.html">プライバシーポリシー・広告について</a></p>
-<p class="muted">キャラクターの人気数は AniList のお気に入り登録数、作品の並びは国内・世界の配信サービス総合ランキング（JustWatch ほか）をもとにしています。作品・キャラクターの権利は各権利者に帰属します。キャラクターの画像は掲載していません。</p></footer>
+<p class="muted">キャラクターの人気数は AniList のお気に入り登録数、作品の並びは国内・世界の配信サービス総合ランキング（JustWatch ほか）をもとにしています。作品・キャラクターの権利は各権利者に帰属します。ヘッダー画像は運営者が用意したファンアートで、公式の画像ではありません。</p></footer>
 <script src="{rel}app.js"></script></body></html>""".format(
         full=esc(full), desc=esc(desc), canon=canon, ogimg='<meta property="og:image" content="%s">' % og if og else "",
         gsv='<meta name="google-site-verification" content="%s">' % esc(S["google_site_verification"]) if S.get("google_site_verification") else "",
@@ -130,7 +131,7 @@ for w in WORKS:
         '<div class="w-body"><div class="w-pv">%s</div><div class="w-list">%s</div></div>%s</section>'
         % (w["rank"], w["rank"], esc(w["work"]), pv_block(w, True), "".join(card(h) for h in w["list"]), watch_line(w)))
 picks = [{"id": h["id"], "n": h["name"], "w": h["work"], "p": h["point"], "c": color(h)} for h in H]
-hero = """<section class="hero"><h1>{name}</h1><p class="catch">{catch}</p>
+hero = """<section class="hero"><img class="banner" src="img/header.jpg" width="1696" height="624" alt="アニメ美少女ヒロイン図鑑 HEROINE COLLECTION"><h1>{name}</h1><p class="catch">{catch}</p>
 <p class="lead">{lead}</p>
 <ul class="nums"><li><b>{nw}</b>作品</li><li><b>{nh}</b>人のヒロイン</li><li><b>{ns}</b>人は勝ち負け関係なし枠</li></ul>
 <div class="cta"><button id="gacha" class="b1" type="button">今日の推し候補を引く</button><a class="b2" href="#list">ランキングから探す</a></div>
@@ -172,7 +173,7 @@ page("about.html", "運営者の気持ち", "知らない美少女を、みん�
 page("privacy.html", "プライバシーポリシー・広告について", "当サイトのプライバシーポリシーと広告の表示について。", """<section class="intro"><h1>プライバシーポリシー・広告について</h1>
 <h2>広告について</h2><p>当サイトは Amazonアソシエイト・楽天アフィリエイト・もしもアフィリエイトに参加しています。リンクからの購入で、運営者に紹介料が入ることがあります。紹介する作品やキャラクターの選び方は、広告の有無とは関係ありません。</p>
 <h2>アクセス解析</h2><p>当サイトは Google アナリティクスを利用しています。データは匿名で集められ、個人を特定するものではありません。ブラウザの設定で Cookie を無効にできます。</p>
-<h2>著作権について</h2><p>作品・キャラクターの権利は各権利者に帰属します。当サイトはキャラクターの画像を掲載せず、公式 YouTube の動画を埋め込みでのみ紹介しています。問題がある場合はお手数ですがご連絡ください。</p>
+<h2>著作権について</h2><p>作品・キャラクターの権利は各権利者に帰属します。ヘッダー画像は運営者が用意したファンアートで、公式の画像ではありません。それ以外にキャラクターの画像は掲載せず、作品の映像は公式 YouTube の動画を埋め込みでのみ紹介しています。問題がある場合はお手数ですがご連絡ください。</p>
 <h2>データの出典</h2><p>人気数: AniList（お気に入り登録数）／作品の並び: JustWatch・Netflix 公式 Top 10 ほかの配信サービス総合ランキング／配信先: JustWatch。</p></section>""")
 
 # ---------- 静的ファイル ----------

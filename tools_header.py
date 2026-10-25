@@ -32,4 +32,4 @@ for txt, size, y, col in [(l1, 64, 170, (255, 255, 255)), (l2, 64, 270, (255, 15
     d.text(((W - w) / 2, y), txt, font=f, fill=col, stroke_width=4 if size > 40 else 2, stroke_fill=(30, 20, 60))
 f = ImageFont.truetype(F2, 26); txt = "配信ランキング上位アニメのヒロインを、公式PVと人気の数字で"
 d.text(((W - d.textlength(txt, font=f)) / 2, 480), txt, font=f, fill=(230, 225, 255))
-im.convert("RGB").save("assets/header.jpg", quality=90)
+im.convert("RGB").save("assets/header_drawn.jpg", quality=90)  # 本人の画像 assets/header.jpg を上書きしない
