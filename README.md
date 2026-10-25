@@ -9,4 +9,4 @@ https://oshi-heroine.github.io/ （GitHub oshi-heroine/oshi-heroine.github.io、
 4. `python3 tools_merge.py` → MISSING の子の推しポイントを data/points.json に書く（ネタバレなし・3行くらい＝100〜150字）→ もう一度 tools_merge.py
 5. `python3 build.py`
 
-ヘッダー assets/header.jpg は本人提供の画像（上書きしない）。それ以外にキャラクターの画像は使わない（公式PVの YouTube サムネイル直リンクのみ）。tools_header.py は予備の文字だけヘッダー（header_drawn.jpg）。
+キャラクターの画像は一切使わない（公式PVの YouTube サムネイル直リンクのみ）。ヘッダーは tools_header.py の文字だけ画像。バリューコマースに「商用許諾のない画像を扱っていません」と申告しているため（2026-10-25）。
