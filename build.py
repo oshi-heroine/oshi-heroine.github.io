@@ -52,28 +52,46 @@ def btn(cls, url, label, style=""):
     return '<a class="btn %s" %shref="%s" target="_blank" rel="nofollow sponsored noopener">%s</a>' % (
         cls, ('style="%s" ' % style) if style else "", esc(url), label)
 
+# 配信サービスごとの検索ページ（広告ではない普通のリンク。Prime Video だけ Amazon アソシエイト経由）
+# 2026-10-28 本人「配信はプライムボタンしかないの？」→ 観られるサービスすべてにボタンを出す
+VOD = {"Netflix": ("https://www.netflix.com/search?q=%s", "#e50914"), "Hulu": ("https://www.hulu.jp/search?q=%s", "#1ce783"),
+       "U-NEXT": ("https://video.unext.jp/freeword?query=%s", "#4a8cff"), "FOD": ("https://fod.fujitv.co.jp/psearch/?keyword=%s", "#ff5a5f"),
+       "Disney+": ("https://www.disneyplus.com/ja-jp", "#3c6cff"), "WeTV": ("https://wetv.vip/ja/search?q=%s", "#ff7a00")}
+
 def watch_line(w):
-    """作品がどこで観られるか（JustWatch 調べ）。文章で自然に案内する"""
+    """作品がどこで観られるか（JustWatch 調べ）。観られるサービスごとにボタンを出す"""
     v = W.get(w.get("key") or "") or {}
     svc = list(dict.fromkeys(v.get("flatrate", []) + v.get("free", [])))
-    svc = [s for s in svc if "チャンネル" not in s][:5]
+    svc = [s for s in svc if "チャンネル" not in s][:6]
     if not svc: return ""
-    btns = [btn("vod", s["url"], esc(s["name"]), "--bc:%s" % s["color"]) for s in S.get("streaming", []) if s.get("url")]
-    if "Prime Video" in svc:
-        btns.append(btn("amz", amazon(w["work"] + " Prime Video"), "Prime Videoで探す"))
-    return ('<div class="watch"><p>📺 本編は <b>%s</b> で観られます（%s 時点）</p>%s</div>'
+    q = urllib.parse.quote(w["work"])
+    btns = []
+    for s in svc:
+        if s == "Prime Video":
+            btns.append(btn("amz", amazon(w["work"] + " Prime Video"), "Prime Videoで観る"))
+        elif s in VOD:
+            u, c = VOD[s]
+            btns.append('<a class="btn vod" style="--bc:%s" href="%s" target="_blank" rel="noopener">%sで観る</a>' % (c, esc(u % q if "%s" in u else u), esc(s)))
+    return ('<div class="watch"><p>📺 本編は <b>%s</b> で観られます（%s 時点）。いつものサービスで、そのまま続きへ。</p>%s</div>'
             % ("・".join(esc(s) for s in svc), esc(v.get("date", "")), '<div class="btns">%s</div>' % "".join(btns) if btns else ""))
+
+# グッズは「どんな物か」が分かる形で並べる（2026-10-28 本人「フィギュアってどんなフィギュア？これでは手が伸びない」）
+GOODS = [("アクスタ", "アクリルスタンド", "机に立てておけば、毎日目が合う透明な板のスタンド。"),
+         ("ねんどろいど", "ねんどろいど", "手のひらサイズのデフォルメ人形。表情パーツを差し替えて遊べます。"),
+         ("スケールフィギュア", "スケールフィギュア", "1/7などの本格派。名場面の一瞬を、そのまま部屋に飾れます。"),
+         ("プライズフィギュア", "プライズ フィギュア", "ゲームセンターの景品として作られた、手ごろで始めやすいフィギュア。"),
+         ("缶バッジ・ラバスト", "缶バッジ", "カバンにつけて、一緒にお出かけ。いちばん気軽な推しグッズ。")]
 
 def goods_box(h):
     q = "%s %s" % (h["name"], h["work_short"])
-    items = [("アクスタ", " アクリルスタンド"), ("フィギュア", " フィギュア"), ("缶バッジ", " 缶バッジ")]
     rows = []
-    for lb, suf in items:
-        bs = [btn("amz", amazon(q + suf), "Amazon"), btn("rkt", rakuten(q + suf), "楽天")]
-        if yahoo(q + suf): bs.append(btn("yho", yahoo(q + suf), "Yahoo!"))
-        rows.append('<div class="g-row"><span>%s</span>%s</div>' % (lb, "".join(bs)))
-    return ('<section class="goods"><h2>推しを、毎日そばに</h2><p class="muted">%sのグッズは、手元にあると毎日ちょっと元気が出ます。気になる形はどれですか？</p>%s</section>'
-            % (esc(h["name"]), "".join(rows)))
+    for lb, suf, note in GOODS:
+        bs = [btn("amz", amazon(q + " " + suf), "Amazon"), btn("rkt", rakuten(q + " " + suf), "楽天")]
+        if yahoo(q + " " + suf): bs.append(btn("yho", yahoo(q + " " + suf), "Yahoo!"))
+        rows.append('<div class="g-row"><div class="g-l"><b>%s</b><small>%s</small></div><div class="g-b">%s</div></div>' % (lb, note, "".join(bs)))
+    return ('<section class="goods"><h2>推しを、毎日そばに</h2><p class="muted">%sのグッズは、飾り方や大きさで選べます。あなたの部屋に合うのはどれでしょうか？</p>%s'
+            '<p class="muted small">ボタンを押すと、各ショップで「%s」のグッズを探した結果が開きます。種類によっては商品がまだ無いこともあります。</p></section>'
+            % (esc(h["name"]), "".join(rows), esc(h["name"])))
 
 # ---------- 部品 ----------
 def pv_block(w, small=False):
