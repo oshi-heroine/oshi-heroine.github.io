@@ -1,8 +1,8 @@
 document.querySelectorAll(".pv").forEach(function(b){var bt=b.querySelector("button");if(bt)bt.onclick=function(){
 b.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+b.dataset.id+'?autoplay=1&rel=0" title="公式PV" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';};});
 (function(){var f="all",q=document.getElementById("q");if(!q)return;
-function apply(){var s=q.value.trim().toLowerCase();document.querySelectorAll(".work").forEach(function(w){var n=0;
-w.querySelectorAll(".hcard").forEach(function(c){var ok=(f=="all"||c.dataset.role==f)&&(!s||c.dataset.q.toLowerCase().indexOf(s)>=0);c.classList.toggle("hide",!ok);if(ok)n++;});
+function apply(){var s=q.value.trim().toLowerCase();document.querySelectorAll(".work,.rank-list").forEach(function(w){var n=0;
+w.querySelectorAll(".hcard").forEach(function(c){var ok=(f=="all"||c.dataset.role==f)&&(!s||c.dataset.q.toLowerCase().indexOf(s)>=0);(c.closest(".crow")||c).classList.toggle("hide",!ok);if(ok)n++;});
 w.classList.toggle("hide",n==0);});}
 document.querySelectorAll(".chips button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".chips button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");f=b.dataset.f;apply();};});
 q.oninput=apply;})();
