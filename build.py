@@ -13,6 +13,8 @@ PV = D("pv.json")
 if os.path.exists(os.path.join(ROOT, "data", "pv_extra.json")):  # pv.json で見つからなかった作品の公式動画（手で採用）
     PV.update({k: v for k, v in D("pv_extra.json").items() if not k.startswith("_")})
 W = D("watch.json")
+# 個別ページの紹介文 300〜500 字（2026-10-28 本人「推しポイントがメインになってくるので紹介文書いて」）
+INTRO = D("intro.json") if os.path.exists(os.path.join(ROOT, "data", "intro.json")) else {}
 OUT = os.path.join(ROOT, "docs")
 BASE = S["site_url"].rstrip("/") + "/"
 TODAY = datetime.date.today().isoformat()
@@ -176,11 +178,12 @@ for w in WORKS:
         body = """<nav class="crumb"><a href="../index.html">トップ</a> › <a href="../index.html#w{rank}">{work}</a> › {name}</nav>
 <section class="hp"><div class="hp-top">{tile}<div><p class="muted">{work}</p><h1>{name}</h1><p><i class="role {rc}">{role}</i></p>
 <p class="fav big">♡ <b>{fav}</b>人が推し登録<small>（AniList お気に入り数）</small></p></div></div>
-<h2>ここが推せる</h2><p class="point">{point}</p>{more}
+{intro}<h2>ここが推せる</h2><p class="point">{point}</p>{more}
 <h2>まずは公式PVで会いに行く</h2>{pv}{watch}{goods}
 {others}<div class="next"><p>ほかの子にも会ってみませんか？</p><a class="b1" href="../index.html#list">ランキングに戻る</a><a class="b2" href="../sub.html">勝ち負け関係なし枠</a></div></section>""".format(
             rank=w["rank"], work=esc(w["work"]), name=esc(h["name"]), tile=tile(h, True), rc=h["role"], role=role,
             fav="{:,}".format(h["fav"]), point=esc(h["point"]),
+            intro=('<h2>%sってどんな子？</h2><p class="intro-t">%s</p>' % (esc(h["name"]), esc(INTRO[str(h["id"])]))) if INTRO.get(str(h["id"])) else "",
             more="<p>%s</p>" % esc(h["more"]) if h.get("more") else "",
             pv=pv_block(w) or '<p class="muted">公式PVは準備中です。</p>', watch=watch_line(w), goods=goods_box(h),
             others=('<h2>同じ作品のヒロイン</h2><div class="grid">%s</div>' % "".join(card(o, "../") for o in others)) if others else "")

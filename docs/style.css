@@ -68,3 +68,4 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px 40px;border-top:1px soli
 .cr-n small{font-size:11px;margin-left:1px;color:var(--muted)}
 .crow.top .cr-n{background:var(--ac2);border-color:var(--ac2);color:#2a1c00;font-size:24px}.crow.top .cr-n small{color:#2a1c00}
 .hc-w{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.intro-t{line-height:1.95;font-size:15.5px;margin:0 0 8px}
