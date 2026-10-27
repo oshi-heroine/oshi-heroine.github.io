@@ -3,7 +3,7 @@
 ヘッダー assets/header.jpg はキャラなしの文字だけ画像（tools_header.py）。バリューコマースの「商用許諾のない画像を扱わない」申告のため、キャラ絵は使わない（2026-10-25 本人判断）。
 入力: data/site.json, data/heroines.json, data/pv.json, data/watch.json
 キャラ絵は一切使わない（YouTube 公式サムネイルの直リンクのみ）。"""
-import json, os, html, urllib.parse, hashlib, datetime, shutil
+import json, os, re, html, urllib.parse, hashlib, datetime, shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 D = lambda n: json.load(open(os.path.join(ROOT, "data", n), encoding="utf-8"))
@@ -82,16 +82,46 @@ GOODS = [("アクスタ", "アクリルスタンド", "机に立てておけば�
          ("プライズフィギュア", "プライズ フィギュア", "ゲームセンターの景品として作られた、手ごろで始めやすいフィギュア。"),
          ("缶バッジ・ラバスト", "缶バッジ", "カバンにつけて、一緒にお出かけ。いちばん気軽な推しグッズ。")]
 
-def goods_box(h):
+GD = D("goods.json") if os.path.exists(os.path.join(ROOT, "data", "goods.json")) else {}
+
+def goods_search_rows(h):
     q = "%s %s" % (h["name"], h["work_short"])
     rows = []
     for lb, suf, note in GOODS:
         bs = [btn("amz", amazon(q + " " + suf), "Amazon"), btn("rkt", rakuten(q + " " + suf), "楽天")]
         if yahoo(q + " " + suf): bs.append(btn("yho", yahoo(q + " " + suf), "Yahoo!"))
         rows.append('<div class="g-row"><div class="g-l"><b>%s</b><small>%s</small></div><div class="g-b">%s</div></div>' % (lb, note, "".join(bs)))
-    return ('<section class="goods"><h2>推しを、毎日そばに</h2><p class="muted">%sのグッズは、飾り方や大きさで選べます。あなたの部屋に合うのはどれでしょうか？</p>%s'
-            '<p class="muted small">ボタンを押すと、各ショップで「%s」のグッズを探した結果が開きます。種類によっては商品がまだ無いこともあります。</p></section>'
-            % (esc(h["name"]), "".join(rows), esc(h["name"])))
+    return "".join(rows)
+
+def goods_box(h):
+    """楽天市場商品検索APIで見つかった実在の商品だけを、種類ごとに名前と価格で並べる（tools_goods_fetch.py → data/goods.json）。
+    2026-10-28 本人「フィギュアってどんなフィギュア？これでは手が伸びない」→ 商品が無い種類は出さない。商品画像はキャラ画像なので使わない"""
+    g = GD.get(str(h["id"]))
+    head = '<section class="goods"><h2>推しを、毎日そばに</h2>'
+    if g is None:  # まだ取得していないヒロインは、ショップの検索結果へ
+        return (head + '<p class="muted">%sのグッズは、飾り方や大きさで選べます。あなたの部屋に合うのはどれでしょうか？</p>%s'
+                '<p class="muted small">ボタンを押すと、各ショップで「%s」のグッズを探した結果が開きます。</p></section>'
+                % (esc(h["name"]), goods_search_rows(h), esc(h["name"])))
+    q = "%s %s" % (h["name"], h["work_short"])
+    rows, n = [], 0
+    for lb, suf, note in GOODS:
+        its = g["items"].get(lb)
+        if not its: continue
+        lis = "".join('<a class="g-item" href="%s" target="_blank" rel="nofollow sponsored noopener"><span class="gi-n">%s</span>'
+                      '<span class="gi-p">%s円<small>%s%s</small></span></a>'
+                      % (esc(x["url"]), esc(re.sub(r"^FIG ", "", x["name"])), "{:,}".format(x["price"]), "中古・" if x.get("used") else "", esc(x["shop"])) for x in its)
+        n += len(its)
+        alt = [btn("amz", amazon(q + " " + suf), "Amazon")]
+        if yahoo(q + " " + suf): alt.append(btn("yho", yahoo(q + " " + suf), "Yahoo!"))
+        rows.append('<div class="g-row g-real"><div class="g-l"><b>%s</b><small>%s</small></div><div class="g-items">%s'
+                    '<div class="g-alt"><span>ほかのショップでも探す</span>%s</div></div></div>' % (lb, note, lis, "".join(alt)))
+    if not rows:
+        return (head + '<p class="muted">%sの専用グッズは、楽天市場ではまだ見つかりませんでした。作品のグッズなら、ここから探せます。</p>'
+                '<div class="g-b">%s%s</div></section>'
+                % (esc(h["name"]), btn("amz", amazon(h["work_short"] + " グッズ"), "Amazon"), btn("rkt", rakuten(h["work_short"] + " グッズ"), "楽天")))
+    return (head + '<p class="muted">楽天市場で見つかった%sのグッズ%d点を、種類ごとに並べました。あなたの部屋に合うのはどれでしょうか？</p>%s'
+            '<p class="muted small">価格は%s時点の楽天市場の情報です。売り切れや値下がりもあるので、最新の価格は商品ページで確かめられます。</p></section>'
+            % (esc(h["name"]), n, "".join(rows), esc(g["date"].replace("-", "/"))))
 
 # ---------- 部品 ----------
 def pv_block(w, small=False):
@@ -128,7 +158,7 @@ def page(path, title, desc, body, rel=""):
 <title>{full}</title><meta name="description" content="{desc}"><link rel="canonical" href="{canon}">
 <meta property="og:title" content="{full}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{canon}">
 <meta property="og:type" content="website">{ogimg}<meta name="twitter:card" content="summary_large_image">{gsv}
-<link rel="stylesheet" href="{rel}style.css">{ga}</head><body>
+<link rel="stylesheet" href="{rel}style.css?v=20261028">{ga}</head><body>
 <p class="pr">当サイトはアフィリエイト広告（{asps}）を利用しています</p>
 <header class="top"><a class="logo" href="{rel}index.html"><b>{name}</b><small>{catch}</small></a><nav>{nav}</nav></header>
 <main>{body}</main>

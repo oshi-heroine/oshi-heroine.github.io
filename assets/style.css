@@ -73,3 +73,10 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px 40px;border-top:1px soli
 .g-b{display:flex;gap:6px;flex-wrap:wrap}
 .btn.vod{border-color:var(--bc);color:#fff;background:color-mix(in srgb,var(--bc) 22%,transparent)}
 .small{font-size:12px}
+/* 楽天の実商品（2026-10-28） */
+.g-real{align-items:flex-start}.g-items{flex:2 1 320px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.g-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:inherit;text-decoration:none}
+.g-item:hover{border-color:#ff4d4d}.gi-n{font-size:13.5px;line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.gi-p{flex:none;text-align:right;font-weight:800;color:#ff4d4d;font-size:15px}.gi-p small{display:block;font-weight:400;color:var(--muted);font-size:11px;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g-alt{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}.g-alt .btn{padding:3px 10px;font-size:12px}
+.g-row .g-item span,.g-row .g-alt span{width:auto}.g-row .gi-n{flex:1 1 0}.g-row .gi-p{flex:0 0 auto}
