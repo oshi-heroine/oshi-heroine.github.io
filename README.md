@@ -1,4 +1,4 @@
-# 勝ち負けなんてどうでもいい。あんたの推しは必ずいる 〜アニメの美少女ヒロイン図鑑〜
+# 勝ち負けなんてどうでもいい。あなたの推しは必ずいる 〜アニメの美少女ヒロイン図鑑〜
 
 https://oshi-heroine.github.io/ （GitHub oshi-heroine/oshi-heroine.github.io、Pages main:/docs）
 
