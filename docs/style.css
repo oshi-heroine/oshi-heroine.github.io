@@ -60,3 +60,4 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px 40px;border-top:1px soli
 .banner{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--line);box-shadow:0 10px 40px rgba(0,0,0,.35);margin:0 auto 24px}
 .hero{padding-top:20px}
 .w-pv{position:sticky;top:64px;align-self:start}@media(max-width:760px){.w-pv{position:static}}
+.pv-none{display:flex;align-items:center;justify-content:center;aspect-ratio:16/9;margin:0;border:1px dashed var(--line);border-radius:12px;color:var(--sub,#aaa);font-size:.85rem}

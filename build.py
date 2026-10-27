@@ -10,6 +10,8 @@ D = lambda n: json.load(open(os.path.join(ROOT, "data", n), encoding="utf-8"))
 S = D("site.json")
 H = D("heroines.json")
 PV = D("pv.json")
+if os.path.exists(os.path.join(ROOT, "data", "pv_extra.json")):  # pv.json で見つからなかった作品の公式動画（手で採用）
+    PV.update({k: v for k, v in D("pv_extra.json").items() if not k.startswith("_")})
 W = D("watch.json")
 OUT = os.path.join(ROOT, "docs")
 BASE = S["site_url"].rstrip("/") + "/"
@@ -131,7 +133,7 @@ for w in WORKS:
     work_secs.append(
         '<section class="work" id="w%d"><div class="w-head"><span class="rank">配信総合 %d位</span><h2>%s</h2></div>'
         '<div class="w-body"><div class="w-pv">%s</div><div class="w-list">%s</div></div>%s</section>'
-        % (w["rank"], w["rank"], esc(w["work"]), pv_block(w, True), "".join(card(h) for h in w["list"]), watch_line(w)))
+        % (w["rank"], w["rank"], esc(w["work"]), pv_block(w, True) or '<p class="pv-none">公式PVは準備中です</p>', "".join(card(h) for h in w["list"]), watch_line(w)))
 picks = [{"id": h["id"], "n": h["name"], "w": h["work"], "p": h["point"], "c": color(h)} for h in H]
 hero = """<section class="hero"><h1>{name}</h1><p class="catch">{catch}</p>
 <p class="lead">{lead}</p>
