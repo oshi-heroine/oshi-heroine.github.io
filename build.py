@@ -140,7 +140,7 @@ def tile(h, big=False):
 def card(h, rel="", work=False):
     role = '<i class="role main">メイン</i>' if h["role"] == "main" else '<i class="role sub">勝ち負け関係なし枠</i>'
     return ('<a class="hcard" data-role="%s" data-q="%s" href="%sheroine/%s.html">%s<div class="hc-b"><b>%s</b>%s%s'
-            '<p>%s</p><span class="fav">♡ %s人が推し登録</span></div></a>'
+            '<p>%s</p><span class="fav">♡ %s人が推し登録<small>（AniList お気に入り数）</small></span></div></a>'
             % (h["role"], esc(h["name"] + " " + h["work"]), rel, h["id"], tile(h), esc(h["name"]), role,
                '<span class="hc-w">%s</span>' % esc(h["work_short"]) if work else "", esc(h["point"]), "{:,}".format(h["fav"])))
 
@@ -236,7 +236,7 @@ for w in WORKS:
             pv=pv_block(w) or '<p class="muted">公式PVは準備中です。</p>', watch=watch_line(w), goods=goods_box(h),
             others=('<h2>同じ作品のヒロイン</h2><div class="grid">%s</div>' % "".join(card(o, "../") for o in others)) if others else "")
         page("heroine/%s.html" % h["id"], "%s（%s）の推しポイント" % (h["name"], h["work_short"]),
-             "%s（%s）の推しポイントを紹介。%s ♡%s人が推し登録。" % (h["name"], h["work"], h["point"][:60], "{:,}".format(h["fav"])), body, "../")
+             "%s（%s）の推しポイントを紹介。%s ♡%s人が推し登録（AniList お気に入り数）。" % (h["name"], h["work"], h["point"][:60], "{:,}".format(h["fav"])), body, "../")
 
 # ---------- 運営者・プライバシー ----------
 page("about.html", "運営者の気持ち", "知らない美少女を、みんなに知ってもらうためのサイトです。", '<section class="intro"><h1>運営者の気持ち</h1>%s</section>' % S["about_html"])
