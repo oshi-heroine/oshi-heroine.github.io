@@ -158,7 +158,7 @@ def page(path, title, desc, body, rel=""):
 <title>{full}</title><meta name="description" content="{desc}"><link rel="canonical" href="{canon}">
 <meta property="og:title" content="{full}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{canon}">
 <meta property="og:type" content="website">{ogimg}<meta name="twitter:card" content="summary_large_image">{gsv}
-<link rel="stylesheet" href="{rel}style.css?v=20261028">{ga}</head><body>
+<link rel="stylesheet" href="{rel}style.css?v=20261030">{ga}</head><body>
 <p class="pr">当サイトはアフィリエイト広告（{asps}）を利用しています</p>
 <header class="top"><a class="logo" href="{rel}index.html"><b>{name}</b><small>{catch}</small></a><nav>{nav}</nav></header>
 <main>{body}</main>
