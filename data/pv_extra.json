@@ -37,7 +37,8 @@
   "video_title": "Death Note | OFFICIAL TRAILER",
   "channel": "Crunchyroll",
   "date": "2026-10-27",
-  "work": "DEATH NOTE"
+  "work": "DEATH NOTE",
+  "published": "2026-10-27"
  },
  "07ebf22316": {
   "video_id": "aTvv9bZIoWY",
@@ -60,7 +61,8 @@
   "video_title": "「鋼の錬金術師」CM",
   "channel": "アニプレックス チャンネル",
   "date": "2026-10-27",
-  "work": "鋼の錬金術師"
+  "work": "鋼の錬金術師",
+  "published": "2026-10-27"
  },
  "d6c3c6499f": {
   "video_id": "k4xGqY5IDBE",
@@ -115,7 +117,8 @@
   "video_title": "MY NEIGHBOR TOTORO | Official English Trailer",
   "channel": "GKIDS Films",
   "date": "2026-10-27",
-  "work": "となりのトトロ"
+  "work": "となりのトトロ",
+  "published": "2026-10-27"
  },
  "d286ba10bd": {
   "video_id": "MM075oJpjiE",
@@ -146,7 +149,8 @@
   "video_title": "SPIRITED AWAY | Official Trailer",
   "channel": "GKIDS Films",
   "date": "2026-10-27",
-  "work": "千と千尋の神隠し"
+  "work": "千と千尋の神隠し",
+  "published": "2026-10-27"
  },
  "1ced4a5c1c": {
   "video_id": "0iaEZzOkcDw",
@@ -193,6 +197,79 @@
   "video_title": "K-ON! MOVIE (Trailer)",
   "channel": "TBS Global Business",
   "date": "2026-10-27",
-  "work": "けいおん!"
+  "work": "けいおん!",
+  "published": "2026-10-27"
+ },
+ "207608d8e9": {
+  "video_id": "Q9K39h910EQ",
+  "video_title": "TVアニメ『響け！ユーフォニアム』 ＰＶ（ロングver.）",
+  "channel": "京アニチャンネル",
+  "date": "2015-01-23",
+  "work": "響け！ユーフォニアム",
+  "published": "2015-01-23"
+ },
+ "6918f2b582": {
+  "video_id": "9oBywQ403ZA",
+  "video_title": "TVアニメ『転生した大聖女は、聖女であることをひた隠す』メインPV/2026年10月3日（土）22時より放送・配信開始！",
+  "channel": "博報堂DY ミュージック&ピクチャーズ【Showgate】ch",
+  "date": "2026-09-07",
+  "work": "転生した大聖女は、聖女であることをひた隠す",
+  "published": "2026-09-07"
+ },
+ "e77d4c3576": {
+  "video_id": "1a4LlwWqxSY",
+  "video_title": "TVアニメ『彼女の友達』キャラクターPV：古河カオリ編｜2026年10月放送開始",
+  "channel": "デレギュラ【新アニメレーベル】",
+  "date": "2026-08-05",
+  "work": "彼女の友達",
+  "published": "2026-08-05"
+ },
+ "8f0360bd69": {
+  "video_id": "5hIIBK5H-Ug",
+  "video_title": "TVアニメ『アオアシ』公式PV第１弾｜22年4月9日（土）午後6時25分～NHKEテレにて放送開始！",
+  "channel": "ShoProアニメチャンネル",
+  "date": "2022-03-14",
+  "work": "アオアシ",
+  "published": "2022-03-14"
+ },
+ "b09622a65d": {
+  "video_id": "0QxzxmcWGpE",
+  "video_title": "Playback “COWBOY BEBOP” with Tank!",
+  "channel": "サンライズ  SUNRISE Official ",
+  "date": "2023-08-14",
+  "work": "カウボーイビバップ",
+  "published": "2023-08-14"
+ },
+ "80f57b8daa": {
+  "video_id": "FUCyKknXs-Y",
+  "video_title": "「デュラララ!!×２ 転」PV",
+  "channel": "アニプレックス チャンネル",
+  "date": "2015-07-06",
+  "work": "デュラララ!!",
+  "published": "2015-07-06"
+ },
+ "683c44cd50": {
+  "video_id": "F7nQ0VUAOXg",
+  "video_title": "『すずめの戸締まり』予告",
+  "channel": "東宝MOVIEチャンネル",
+  "date": "2022-07-14",
+  "work": "すずめの戸締まり",
+  "published": "2022-07-14"
+ },
+ "cf7009048d": {
+  "video_id": "Eh-60ESlS74",
+  "video_title": "「BORUTO-ボルト- NARUTO NEXT GENERATIONS」PV",
+  "channel": "テレ東アニメ",
+  "date": "2022-02-14",
+  "work": "BORUTO-ボルト- NARUTO NEXT GENERATIONS",
+  "published": "2022-02-14"
+ },
+ "4a23d01c9b": {
+  "video_id": "-LyODOfv8Sw",
+  "video_title": "デジモンアドベンチャー25周年記念PV 「デジモンアドベンチャー-BEYOND-」",
+  "channel": "デジモン公式チャンネル",
+  "date": "2025-03-20",
+  "work": "デジモンアドベンチャー",
+  "published": "2025-03-20"
  }
 }
