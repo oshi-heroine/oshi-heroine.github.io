@@ -153,7 +153,7 @@ def page(path, title, desc, body, rel=""):
     canon = BASE + path.replace("index.html", "")
     og = BASE + "img/header.jpg" if os.path.exists(os.path.join(ROOT, "assets", "header.jpg")) else ""
     nav = "".join('<a href="%s%s">%s</a>' % (rel, u, l) for u, l in
-                  [("index.html", "作品ランキング"), ("chara.html", "キャラ人気ランキング"), ("sub.html", "勝ち負け関係なし枠"), ("about.html", "運営者の気持ち")])
+                  [("index.html", "キャラ人気ランキング"), ("works.html", "作品ランキング"), ("sub.html", "勝ち負け関係なし枠"), ("about.html", "運営者の気持ち")])
     html_ = """<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{full}</title><meta name="description" content="{desc}"><link rel="canonical" href="{canon}">
 <meta property="og:title" content="{full}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{canon}">
@@ -178,7 +178,7 @@ ASPS_TXT = "Amazonアソシエイト・楽天アフィリエイト" + ("・バ�
 if os.path.exists(OUT): shutil.rmtree(OUT)
 os.makedirs(OUT)
 
-# ---------- トップ ----------
+# ---------- トップ＝キャラ人気ランキング（2026-11-03 本人「トップページにキャラ人気ランキングを持ってきて。作品ランキングと入れ替えて」） ----------
 work_secs = []
 for w in WORKS:
     work_secs.append(
@@ -189,27 +189,33 @@ picks = [{"id": h["id"], "n": h["name"], "w": h["work"], "p": h["point"], "c": c
 hero = """<section class="hero"><h1>{name}</h1><p class="catch">{catch}</p>
 <p class="lead">{lead}</p>
 <ul class="nums"><li><b>{nw}</b>作品</li><li><b>{nh}</b>人のヒロイン</li><li><b>{ns}</b>人は勝ち負け関係なし枠</li></ul>
-<div class="cta"><button id="gacha" class="b1" type="button">今日の推し候補を引く</button><a class="b2" href="chara.html">キャラ人気順で見る</a></div>
+<div class="cta"><button id="gacha" class="b1" type="button">今日の推し候補を引く</button><a class="b2" href="works.html">作品ごとに見る</a></div>
 <div id="gacha-out" class="gacha-out" hidden></div></section>""".format(
     name=esc(S["name"]).replace("。", "。<br>", 1), catch=esc(S["catch"]), lead=S["lead_html"], nw=N_WORKS, nh=N_HER, ns=N_SUB)
-tools = """<div class="tools" id="list"><div class="chips"><button class="on" data-f="all">すべて（{nh}）</button><button data-f="main">メイン</button><button data-f="sub">勝ち負け関係なし枠</button></div>
+TOOLS = """<div class="tools" id="list"><div class="chips"><button class="on" data-f="all">すべて（{nh}）</button><button data-f="main">メイン</button><button data-f="sub">勝ち負け関係なし枠</button></div>
 <input id="q" type="search" placeholder="名前・作品名でさがす" aria-label="名前・作品名でさがす"></div>""".format(nh=N_HER)
-body = hero + tools + "".join(work_secs) + '<script>window.PICKS=%s;</script>' % json.dumps(picks, ensure_ascii=False)
-page("index.html", S["seo_title"], S["description"], body)
 
-# ---------- キャラ人気ランキング（2026-10-28 本人「キャラでランキングのページを追加して」） ----------
 ranked = sorted(H, key=lambda h: (-h["fav"], h["rank"]))
 rows, prev, n = [], None, 0
 for i, h in enumerate(ranked, 1):
     if h["fav"] != prev: n, prev = i, h["fav"]  # 同じ数なら同じ順位
     rows.append('<li class="crow%s"><span class="cr-n">%d<small>位</small></span>%s</li>' % (" top" if n <= 3 else "", n, card(h, work=True)))
-body = ('<section class="intro"><h1>キャラ人気ランキング</h1><p class="lead">作品の順位ではなく、ヒロイン一人ひとりの人気で並べました。'
+body = (hero + '<section class="intro"><h2>キャラ人気ランキング</h2><p class="lead">ヒロイン一人ひとりの人気で並べました。'
         '数字は、世界中のアニメファンが AniList で「お気に入り」に登録した人数です（%s 時点）。%d人のうち、あなたの推しは何位にいますか？</p></section>'
-        '<div class="tools" id="list"><div class="chips"><button class="on" data-f="all">すべて（%d）</button><button data-f="main">メイン</button><button data-f="sub">勝ち負け関係なし枠</button></div>'
-        '<input id="q" type="search" placeholder="名前・作品名でさがす" aria-label="名前・作品名でさがす"></div>'
-        '<ol class="rank-list">%s</ol>' % (TODAY, N_HER, N_HER, "".join(rows)))
-page("chara.html", "アニメヒロイン キャラ人気ランキング%d人" % N_HER,
-     "配信ランキング上位アニメのヒロイン%d人を、AniList のお気に入り登録数で順位づけ。1位は%s（%s）。あなたの推しは何位？" % (N_HER, ranked[0]["name"], ranked[0]["work_short"]), body)
+        % (TODAY, N_HER) + TOOLS + '<ol class="rank-list">%s</ol>' % "".join(rows)
+        + '<script>window.PICKS=%s;</script>' % json.dumps(picks, ensure_ascii=False))
+page("index.html", S["seo_title"], S["description"], body)
+
+# ---------- 作品ランキング ----------
+body = ('<section class="intro"><h1>作品ランキング</h1><p class="lead">配信サービスの総合ランキング順に、作品ごとのヒロインと公式PVを並べました。'
+        '気になる作品から、まだ知らない子に会えるかもしれません。どの作品から見てみますか？</p></section>' + TOOLS + "".join(work_secs))
+page("works.html", "配信ランキング順 アニメ%d作品のヒロイン" % N_WORKS,
+     "配信総合ランキング上位のアニメ%d作品を順位順に。作品ごとのヒロイン%d人と公式PV、観られる配信サービスがわかります。" % (N_WORKS, N_HER), body)
+
+# 旧 chara.html はトップへ移ったので転送だけ残す
+open(os.path.join(OUT, "chara.html"), "w", encoding="utf-8").write(
+    '<!doctype html><meta charset="utf-8"><title>キャラ人気ランキング</title><link rel="canonical" href="%s">'
+    '<meta http-equiv="refresh" content="0;url=./"><a href="./">キャラ人気ランキングはトップページに移りました</a>' % BASE)
 
 # ---------- 勝ち負け関係なし枠 ----------
 subs = sorted([h for h in H if h["role"] == "sub"], key=lambda h: -h["fav"])
@@ -223,7 +229,7 @@ for w in WORKS:
     for h in w["list"]:
         others = [o for o in w["list"] if o["id"] != h["id"]]
         role = "メインヒロイン" if h["role"] == "main" else "勝ち負けなんてどうでもいい枠（サブヒロイン）"
-        body = """<nav class="crumb"><a href="../index.html">トップ</a> › <a href="../index.html#w{rank}">{work}</a> › {name}</nav>
+        body = """<nav class="crumb"><a href="../index.html">トップ</a> › <a href="../works.html#w{rank}">{work}</a> › {name}</nav>
 <section class="hp"><div class="hp-top">{tile}<div><p class="muted">{work}</p><h1>{name}</h1><p><i class="role {rc}">{role}</i></p>
 <p class="fav big">♡ <b>{fav}</b>人が推し登録<small>（AniList お気に入り数）</small></p></div></div>
 {intro}<h2>ここが推せる</h2><p class="point">{point}</p>{more}
