@@ -89,3 +89,5 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px 40px;border-top:1px soli
 .btn.amz{--bc:#ffad33;color:#ffc266}
 .btn.rkt{--bc:#ff5c7a;color:#ff8fa3}
 .btn.yho{--bc:#ff4d6d;color:#ff8fa3}
+/* 公式Xの埋め込み（2026-11-09） */
+.xpost{margin:18px 0 6px;max-width:460px}.xpost .twitter-tweet{margin:0 0 4px!important}.xpost blockquote{margin:0;padding:14px;border:1px solid var(--line);border-radius:12px}.xpost blockquote a{color:#8ec5ff}

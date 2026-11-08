@@ -2,7 +2,7 @@
 """アニメヒロイン図鑑サイトを docs/ に書き出す。
 ヘッダー assets/header.jpg はキャラなしの文字だけ画像（tools_header.py）。バリューコマースの「商用許諾のない画像を扱わない」申告のため、キャラ絵は使わない（2026-10-25 本人判断）。
 入力: data/site.json, data/heroines.json, data/pv.json, data/watch.json
-キャラ絵は一切使わない（YouTube 公式サムネイルの直リンクのみ）。"""
+キャラ絵のファイルは一切持たない（YouTube 公式サムネイルの直リンクと、公式Xの投稿の埋め込みのみ）。"""
 import json, os, re, html, urllib.parse, hashlib, datetime, shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -15,6 +15,7 @@ if os.path.exists(os.path.join(ROOT, "data", "pv_extra.json")):  # pv.json で�
 W = D("watch.json")
 # 個別ページの紹介文 300〜500 字（2026-10-28 本人「推しポイントがメインになってくるので紹介文書いて」）
 INTRO = D("intro.json") if os.path.exists(os.path.join(ROOT, "data", "intro.json")) else {}
+XP = D("x_posts.json") if os.path.exists(os.path.join(ROOT, "data", "x_posts.json")) else {}  # 公式Xの投稿（id → url, account）
 OUT = os.path.join(ROOT, "docs")
 BASE = S["site_url"].rstrip("/") + "/"
 TODAY = datetime.date.today().isoformat()
@@ -124,6 +125,15 @@ def goods_box(h):
             % (esc(h["name"]), n, "".join(rows), esc(g["date"].replace("-", "/"))))
 
 # ---------- 部品 ----------
+def x_block(h):
+    """公式Xの投稿を X の埋め込みで表示（画像はサイトに保存しない）。2026-11-09 本人「公式Xの画像を『どんな子？』の前に。外見がわかる」
+    公式アカウントの投稿だけ。tools_x_check.py で消えた投稿を外す"""
+    x = XP.get(str(h["id"]))
+    if not x: return ""
+    return ('<div class="xpost"><blockquote class="twitter-tweet" data-lang="ja" data-dnt="true" data-theme="dark" data-conversation="none">'
+            '<a href="%s">公式Xで%sの姿を見る</a></blockquote><p class="src">出典: X「%s」の投稿（埋め込み）</p></div>'
+            % (esc(x["url"]), esc(h["name"]), esc(x["account"])))
+
 def pv_block(w, small=False):
     v = PV.get(w.get("key") or "") or {}
     if not v.get("video_id"): return ""
@@ -158,18 +168,19 @@ def page(path, title, desc, body, rel=""):
 <title>{full}</title><meta name="description" content="{desc}"><link rel="canonical" href="{canon}">
 <meta property="og:title" content="{full}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{canon}">
 <meta property="og:type" content="website">{ogimg}<meta name="twitter:card" content="summary_large_image">{gsv}
-<link rel="stylesheet" href="{rel}style.css?v=20261109">{ga}</head><body>
+<link rel="stylesheet" href="{rel}style.css?v=20261109x">{ga}</head><body>
 <p class="pr">当サイトはアフィリエイト広告（{asps}）を利用しています</p>
 <header class="top"><a class="logo" href="{rel}index.html"><b>{name}</b><small>{catch}</small></a><nav>{nav}</nav></header>
 <main>{body}</main>
 <footer><p>{name}　{catch}</p><p><a href="{rel}about.html">運営者の気持ち</a>・<a href="{rel}privacy.html">プライバシーポリシー・広告について</a></p>
-<p class="muted">キャラクターの人気数は AniList のお気に入り登録数、作品の並びは国内・世界の配信サービス総合ランキング（JustWatch ほか）をもとにしています。作品・キャラクターの権利は各権利者に帰属します。キャラクターの画像は掲載していません。</p></footer>
+<p class="muted">キャラクターの人気数は AniList のお気に入り登録数、作品の並びは国内・世界の配信サービス総合ランキング（JustWatch ほか）をもとにしています。作品・キャラクターの権利は各権利者に帰属します。キャラクターの画像は、公式アカウントの投稿を X の埋め込み機能で表示しているものだけで、当サイトには保存していません。</p></footer>
 <script src="{rel}app.js"></script></body></html>""".format(
         full=esc(full), desc=esc(desc), canon=canon, ogimg='<meta property="og:image" content="%s">' % og if og else "",
         gsv='<meta name="google-site-verification" content="%s">' % esc(S["google_site_verification"]) if S.get("google_site_verification") else "",
         rel=rel, ga=GA_TAG, asps=ASPS_TXT, name=esc(S["name"]), catch=esc(S["catch"]), nav=nav, body=body)
     p = os.path.join(OUT, path)
     os.makedirs(os.path.dirname(p), exist_ok=True)
+    if "twitter-tweet" in body: html_ = html_.replace("</body>", '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></body>', 1)
     open(p, "w", encoding="utf-8").write(html_)
     SITEMAP.append(canon)
 
@@ -232,11 +243,12 @@ for w in WORKS:
         body = """<nav class="crumb"><a href="../index.html">トップ</a> › <a href="../works.html#w{rank}">{work}</a> › {name}</nav>
 <section class="hp"><div class="hp-top">{tile}<div><p class="muted">{work}</p><h1>{name}</h1><p><i class="role {rc}">{role}</i></p>
 <p class="fav big">♡ <b>{fav}</b>人が推し登録<small>（AniList お気に入り数）</small></p></div></div>
-{intro}<h2>ここが推せる</h2><p class="point">{point}</p>{more}
+{xpost}{intro}<h2>ここが推せる</h2><p class="point">{point}</p>{more}
 <h2>まずは公式PVで会いに行く</h2>{pv}{watch}{goods}
 {others}<div class="next"><p>ほかの子にも会ってみませんか？</p><a class="b1" href="../index.html#list">ランキングに戻る</a><a class="b2" href="../sub.html">勝ち負け関係なし枠</a></div></section>""".format(
             rank=w["rank"], work=esc(w["work"]), name=esc(h["name"]), tile=tile(h, True), rc=h["role"], role=role,
             fav="{:,}".format(h["fav"]), point=esc(h["point"]),
+            xpost=x_block(h),
             intro=('<h2>%sってどんな子？</h2><p class="intro-t">%s</p>' % (esc(h["name"]), esc(INTRO[str(h["id"])]))) if INTRO.get(str(h["id"])) else "",
             more="<p>%s</p>" % esc(h["more"]) if h.get("more") else "",
             pv=pv_block(w) or '<p class="muted">公式PVは準備中です。</p>', watch=watch_line(w), goods=goods_box(h),
@@ -249,7 +261,7 @@ page("about.html", "運営者の気持ち", "知らない美少女を、みん�
 page("privacy.html", "プライバシーポリシー・広告について", "当サイトのプライバシーポリシーと広告の表示について。", """<section class="intro"><h1>プライバシーポリシー・広告について</h1>
 <h2>広告について</h2><p>当サイトは """ + ASPS_TXT + """ に参加しています。リンクからの購入で、運営者に紹介料が入ることがあります。紹介する作品やキャラクターの選び方は、広告の有無とは関係ありません。</p>
 <h2>アクセス解析</h2><p>当サイトは Google アナリティクスを利用しています。データは匿名で集められ、個人を特定するものではありません。ブラウザの設定で Cookie を無効にできます。</p>
-<h2>著作権について</h2><p>作品・キャラクターの権利は各権利者に帰属します。キャラクターの画像は掲載していません。それ以外にキャラクターの画像は掲載せず、作品の映像は公式 YouTube の動画を埋め込みでのみ紹介しています。問題がある場合はお手数ですがご連絡ください。</p>
+<h2>著作権について</h2><p>作品・キャラクターの権利は各権利者に帰属します。キャラクターの画像は、公式アカウントの投稿を X の埋め込み機能で表示しているものだけで、当サイトには保存していません。作品の映像は公式 YouTube の動画を埋め込みでのみ紹介しています。埋め込みの表示には X（X Corp.）のサービスが使われます。問題がある場合はお手数ですがご連絡ください。</p>
 <h2>データの出典</h2><p>人気数: AniList（お気に入り登録数）／作品の並び: JustWatch・Netflix 公式 Top 10 ほかの配信サービス総合ランキング／配信先: JustWatch。</p></section>""")
 
 # ---------- 静的ファイル ----------
