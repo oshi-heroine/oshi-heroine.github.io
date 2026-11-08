@@ -11,4 +11,4 @@ https://oshi-heroine.github.io/ （GitHub oshi-heroine/oshi-heroine.github.io、
 4b. `python3 tools_goods_fetch.py --all`（楽天市場の商品検索APIで、ヒロイン×グッズ5種類の実在の商品名・価格を data/goods.json に取り直す。約40分。キーは .secrets.json＝公開しない。楽天の商品画像はキャラ画像なので使わない）
 5. `python3 build.py`
 
-キャラクターの画像は一切使わない（公式PVの YouTube サムネイル直リンクのみ）。ヘッダーは tools_header.py の文字だけ画像。バリューコマースに「商用許諾のない画像を扱っていません」と申告しているため（2026-10-25）。
+キャラクターの画像ファイルは一切持たない（公式PVの YouTube サムネイル直リンクと、公式アカウントの X 投稿の埋め込み data/x_posts.json のみ。消えた投稿は tools_x_check.py で外す。2026-11-09 本人判断）。ヘッダーは tools_header.py の文字だけ画像。バリューコマースに「商用許諾のない画像を扱っていません」と申告しているため（2026-10-25）。
