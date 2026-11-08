@@ -82,3 +82,10 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px 40px;border-top:1px soli
 .gi-p{flex:none;text-align:right;font-weight:800;color:#ff4d4d;font-size:15px}.gi-p small{display:block;font-weight:400;color:var(--muted);font-size:11px;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .g-alt{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}.g-alt .btn{padding:3px 10px;font-size:12px}
 .g-row .g-item span,.g-row .g-alt span{width:auto}.g-row .gi-n{flex:1 1 0}.g-row .gi-p{flex:0 0 auto}
+
+/* 2026-11-09 本人指示: ボタンの白が目に痛い → 背景を枠（card）と同じ色に */
+.btn{background:var(--card);color:color-mix(in srgb,var(--bc) 55%,#fff)}
+.btn:hover{background:#2c2858}
+.btn.amz{--bc:#ffad33;color:#ffc266}
+.btn.rkt{--bc:#ff5c7a;color:#ff8fa3}
+.btn.yho{--bc:#ff4d6d;color:#ff8fa3}
